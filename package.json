@@ -1,0 +1,56 @@
+{
+  "name": "noswbi",
+  "version": "1.0.0",
+  "description": "Node server with batteries included!",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "scripts": {
+    "start": "nodemon index.js",
+    "prod": "node index.js",
+    "develop": "jest --watch src",
+    "test": "jest",
+    "test:coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "author": "Adrián Gonzalo",
+  "license": "MIT",
+  "homepage": "https://github.com/agm-dev/noswbi",
+  "lint-staged": {
+    "*.js": [
+      "npm run --silent lint:fix",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test && lint-staged"
+    }
+  },
+  "devDependencies": {
+    "codacy-coverage": "^3.4.0",
+    "eslint": "^6.3.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.0",
+    "prettier": "^1.18.2",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.2",
+    "husky": "^3.0.5",
+    "lint-staged": "^9.2.5"
+  },
+  "keywords": [
+    "node",
+    "nodejs",
+    "server",
+    "package",
+    "npm"
+  ]
+}
