@@ -1,7 +1,7 @@
-// imports & requires
+const { createServer } = require("./domain/server");
+const { createRouter } = require("./domain/router");
 
-const app = {
-  /* create something awesome here! */
+module.exports = {
+  createServer,
+  createRouter
 };
-
-module.exports = app;

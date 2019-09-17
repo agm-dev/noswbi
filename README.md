@@ -8,3 +8,7 @@
 ![GitHub](https://img.shields.io/github/license/agm-dev/noswbi)
 
 Noswbi is a NodeJS HTTP server with everything but routes configured.
+
+## Production
+
+Don't forget to set the `NODE_ENV` variable to `"production"`. It will improve the performance of the server and will remove the stack trace from error handler.
