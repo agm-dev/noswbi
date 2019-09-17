@@ -1,5 +1,6 @@
 const cors = require("cors");
 const server = require("../config/server");
+const handlers = require("../utils/handlers");
 
 exports.createServer = (router, config = {}) => {
   if ([undefined, null].includes(typeof router)) {
@@ -17,9 +18,11 @@ exports.createServer = (router, config = {}) => {
 
   // TODO: passport auth endpoint if enabled from options
 
-  server.route("/", router);
+  const routesPrefix = config.routesPrefix || "/";
+  server.use(routesPrefix, router);
 
-  // TODO: set error handlers
+  server.use(handlers.notFoundHandler());
+  server.use(handlers.errorHandler());
 
   return server;
 };
