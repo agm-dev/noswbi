@@ -1,6 +1,6 @@
 {
   "name": "noswbi",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Node server with batteries included!",
   "main": "index.js",
   "engines": {
@@ -10,7 +10,7 @@
     "start": "nodemon index.js",
     "prod": "NODE_ENV=production node index.js",
     "develop": "jest --watch src",
-    "test": "jest --detectOpenHandles",
+    "test": "jest",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
