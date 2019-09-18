@@ -11,6 +11,11 @@ exports.createServer = (router, config = {}) => {
     server.use(cors());
   }
 
+  // enabled by default
+  if (config.forceJsonResponse !== false) {
+    server.use(handlers.forceJsonResponse());
+  }
+
   // TODO: setup logging system from options, or generic one with winston
 
   // TODO: swagger openapi endpoint

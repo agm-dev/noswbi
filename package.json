@@ -10,7 +10,7 @@
     "start": "nodemon index.js",
     "prod": "NODE_ENV=production node index.js",
     "develop": "jest --watch src",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

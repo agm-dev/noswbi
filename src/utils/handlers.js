@@ -1,14 +1,12 @@
 const httpStatus = require("http-status");
 const ApiError = require("./ApiError");
 
-exports.notFoundHandler = (config = {}) => (err, req, res, next) => {
-  // if there is an error just jump to the next handler
-  if (err) {
-    next();
-    return;
-  }
+exports.forceJsonResponse = () => (req, res, next) => {
+  res.setHeader("Content-Type", "application/json");
+  next();
+};
 
-  const { logger } = config;
+exports.notFoundHandler = ({ logger } = {}) => (req, res) => {
   if (logger) {
     // TODO: append to the log an object with some request data
     logger.info("not found");
@@ -21,7 +19,13 @@ exports.notFoundHandler = (config = {}) => (err, req, res, next) => {
   });
 };
 
-exports.errorHandler = (config = {}) => (err, req, res) => {
+/**
+ * Express error handlers requires a 4 params
+ * signature in the middleware function to use
+ * it as error handler.
+ */
+// eslint-disable-next-line no-unused-vars
+exports.errorHandler = (config = {}) => (err, req, res, next) => {
   const { logger } = config;
   if (logger) {
     logger.error(err);

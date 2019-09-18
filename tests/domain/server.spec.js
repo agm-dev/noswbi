@@ -19,14 +19,14 @@ describe("createServer", () => {
   });
 
   test("should create a server with provided router", async () => {
-    request(server)
+    await request(server)
       .get("/status")
       .expect("Content-Type", /json/)
       .expect(httpStatus.OK, { status: "OK" });
   });
 
   test("should return 404 not found response", async () => {
-    request(server)
+    await request(server)
       .get("/thisdoesnotexist")
       .expect("Content-Type", /json/)
       .expect(httpStatus.NOT_FOUND, {
