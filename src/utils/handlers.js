@@ -2,7 +2,7 @@ const httpStatus = require("http-status");
 const ApiError = require("./ApiError");
 
 exports.forceJsonResponse = () => (req, res, next) => {
-  res.setHeader("Content-Type", "application/json");
+  res.set("Content-Type", "application/json");
   next();
 };
 
