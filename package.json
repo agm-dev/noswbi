@@ -1,6 +1,6 @@
 {
   "name": "noswbi",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Node server with batteries included!",
   "main": "index.js",
   "engines": {
