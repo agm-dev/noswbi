@@ -2,6 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const compression = require("compression");
 const bodyParser = require("body-parser");
+const protect = require("./overload-protection");
 
 /**
  * If later we change the server library we should
@@ -16,6 +17,7 @@ const server = express();
 
 server.set("x-powered-by", false); // helmet should include this one
 
+server.use(protect); // overload-protection
 server.use(helmet()); // protects from well known web vulnerabilities
 server.use(compression()); // compress all responses
 server.use(bodyParser.json()); // parses application/json
