@@ -13,6 +13,12 @@ exports.createServer = (router, config = {}) => {
     server.use(cors());
   }
 
+  if (validateConfigAuth(config.auth)) {
+    // eslint-disable-next-line global-require
+    const passport = require("passport");
+    server.use(passport.initialize());
+  }
+
   // enabled by default
   if (config.forceJsonResponse !== false) {
     server.use(handlers.forceJsonResponse());
@@ -31,7 +37,7 @@ exports.createServer = (router, config = {}) => {
   // TODO: config.auth is an object with required configuration
   // for social login (google). Add an util to validate the provided
   // config or throw proper errors
-  if (config.auth && validateConfigAuth(config.auth)) {
+  if (validateConfigAuth(config.auth)) {
     // TODO: create utility validateConfigAuth
     server.use(routesPrefix, authRouter);
   }
