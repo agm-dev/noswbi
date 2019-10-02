@@ -4,7 +4,11 @@ const { createRouter } = require("../../src/domain/router");
 const { createServer } = require("../../src/domain/server");
 
 const router = createRouter();
-router.get("/status", (req, res) => res.status(200).json({ status: "OK" }));
+router.get("/status", (req, res) => {
+  res.set("Content-Type", "application/json"); // FIXME: this shouldn't be required, but tests fails randomly without forcing content type here... :/
+  res.status(200);
+  res.json({ status: "OK" });
+});
 
 const server = createServer(router);
 
