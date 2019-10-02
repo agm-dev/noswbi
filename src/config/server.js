@@ -17,7 +17,16 @@ const server = express();
 
 server.set("x-powered-by", false); // helmet should include this one
 
-server.use(protect); // overload-protection
+/**
+ * Enabled only on production environment
+ * on test environment produces some
+ * 503 erros which makes tests to fail
+ * randomly.
+ */
+if (process.env.NODE_ENV === "production") {
+  server.use(protect); // overload-protection
+}
+
 server.use(helmet()); // protects from well known web vulnerabilities
 server.use(compression()); // compress all responses
 server.use(bodyParser.json()); // parses application/json
