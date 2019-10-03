@@ -2,7 +2,8 @@ const cors = require("cors");
 const server = require("../config/server");
 const handlers = require("../utils/handlers");
 const { validateConfigAuth } = require("../utils/validators");
-const authRouter = require("../routes/auth.routes");
+const { configureAuth } = require("../config/passport");
+const { generateAuthRouter } = require("../routes/auth.routes");
 
 exports.createServer = (router, config = {}) => {
   if ([undefined, null].includes(typeof router)) {
@@ -13,10 +14,11 @@ exports.createServer = (router, config = {}) => {
     server.use(cors());
   }
 
-  if (validateConfigAuth(config.auth)) {
+  if (validateConfigAuth(config)) {
     // eslint-disable-next-line global-require
     const passport = require("passport");
     server.use(passport.initialize());
+    configureAuth(config); // TODO: try to put this inside a custom passport were initialize does original initialize plus this, OR inside the auth router
   }
 
   // enabled by default
@@ -37,9 +39,16 @@ exports.createServer = (router, config = {}) => {
   // TODO: config.auth is an object with required configuration
   // for social login (google). Add an util to validate the provided
   // config or throw proper errors
-  if (validateConfigAuth(config.auth)) {
+  if (validateConfigAuth(config)) {
     // TODO: create utility validateConfigAuth
-    server.use(routesPrefix, authRouter);
+    server.use(
+      routesPrefix,
+      generateAuthRouter({
+        secret: config.auth.jwtSecret,
+        issuer: config.auth.issuer,
+        audience: config.auth.audience
+      })
+    );
   }
   //
 

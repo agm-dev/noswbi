@@ -2,13 +2,19 @@ const { createRouter } = require("../domain/router");
 const { googleLogin, googleLoginRedirect } = require("../config/passport");
 const { generateJwt } = require("../utils/tokens");
 
-const router = createRouter();
+const generateAuthRouter = jwtConfig => {
+  const router = createRouter();
 
-router.get("/login/google", googleLogin());
-router.get("/login/google/callback", googleLoginRedirect(), (req, res) => {
-  res.json({
-    token: generateJwt(req.user.id, {})
+  router.get("/auth/google", googleLogin());
+  router.get("/auth/google/callback", googleLoginRedirect(), (req, res) => {
+    res.json({
+      token: generateJwt(req.user.id, {}, jwtConfig)
+    });
   });
-});
 
-module.exports = router;
+  return router;
+};
+
+module.exports = {
+  generateAuthRouter
+};
