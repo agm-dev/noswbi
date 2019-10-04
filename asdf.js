@@ -1,8 +1,14 @@
-const { createRouter, createServer } = require("./index");
+const { createRouter, createServer, auth } = require("./index");
 
 const router = createRouter();
 
 router.get("/", (req, res) => res.send("holi"));
+router.get("/protected", auth(), (req, res) =>
+  res.json({
+    message: "protected!",
+    user: req.user || {}
+  })
+);
 
 const options = {
   allowCors: true,

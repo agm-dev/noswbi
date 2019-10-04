@@ -21,7 +21,9 @@ const configureAuth = config => {
       }
 
       const data = {
-        id: payload.sub
+        id: payload.sub,
+        name: payload.name,
+        email: payload.email
       };
       return done(null, data, payload);
     })
@@ -48,16 +50,6 @@ const configureAuth = config => {
       }
     )
   );
-
-  /*
-  passport.serializeUser((user, cb) => {
-    cb(null, user);
-  });
-
-  passport.deserializeUser((obj, cb) => {
-    cb(null, obj);
-  });
-  */
 };
 
 const auth = () => passport.authenticate("jwt", { session: false });
