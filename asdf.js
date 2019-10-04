@@ -1,12 +1,20 @@
 const { createRouter, createServer, auth } = require("./index");
 
 const router = createRouter();
+const protectedRoutes = createRouter({ requireAuth: true });
 
 router.get("/", (req, res) => res.send("holi"));
 router.get("/protected", auth(), (req, res) =>
   res.json({
     message: "protected!",
     user: req.user || {}
+  })
+);
+
+protectedRoutes.get("/supersecret", (req, res) =>
+  res.json({
+    message: "this should be protected by default",
+    user: req.user
   })
 );
 
@@ -26,7 +34,7 @@ const options = {
   }
 };
 
-const server = createServer(router, options);
+const server = createServer([router, protectedRoutes], options);
 
 // eslint-disable-next-line no-console
 server.listen(3000, () => console.log("running on 3000"));

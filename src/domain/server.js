@@ -1,11 +1,11 @@
 const cors = require("cors");
 const server = require("../config/server");
 const handlers = require("../utils/handlers");
-const { validateConfigAuth } = require("../utils/validators");
+const { validateConfigAuth, validateRouter } = require("../utils/validators");
 const { configureAuth } = require("../config/passport");
 const { generateAuthRouter } = require("../routes/auth.routes");
 
-exports.createServer = (router, config = {}) => {
+exports.createServer = (routers, config = {}) => {
   if ([undefined, null].includes(typeof router)) {
     throw new Error("createServer requires a router object");
   }
@@ -29,7 +29,7 @@ exports.createServer = (router, config = {}) => {
   // TODO: setup logging system from options, or generic one with winston
 
   const routesPrefix = config.routesPrefix || "/";
-  server.use(routesPrefix, router);
+  validateRouter(routers).forEach(router => server.use(routesPrefix, router));
 
   // TODO: swagger openapi endpoint
   // TODO: health / status endpoint
