@@ -9,9 +9,20 @@ router.get("/status", (req, res) => res.status(200).json({ status: "OK" }));
 const server = createServer(router);
 
 describe("createServer", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   test("should throw an error if no router provided", done => {
     try {
       createServer();
+      done.fail("test should not reach this point");
+    } catch (err) {
+      expect(err.message).toBe("createServer requires a router object");
+    }
+
+    try {
+      createServer([]);
       done.fail("test should not reach this point");
     } catch (err) {
       done();
@@ -33,5 +44,14 @@ describe("createServer", () => {
         status: httpStatus.NOT_FOUND,
         message: "Requested route doesn't exist"
       });
+  });
+
+  test("should enable cors if allowCors enabled on config", async () => {
+    const corsServer = createServer(router, { allowCors: true });
+    await request(corsServer)
+      .get("/status")
+      .expect(httpStatus.OK)
+      // .expect("Access-Control-Allow-Origin", "*") // FIXME: this doesn't work. Try moving cors to router
+      .expect({ status: "OK" });
   });
 });

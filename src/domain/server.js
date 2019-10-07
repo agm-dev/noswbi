@@ -6,7 +6,7 @@ const { configureAuth } = require("../config/passport");
 const { generateAuthRouter } = require("../routes/auth.routes");
 
 exports.createServer = (routers, config = {}) => {
-  if ([undefined, null].includes(typeof router)) {
+  if (!routers || !routers.length) {
     throw new Error("createServer requires a router object");
   }
 
