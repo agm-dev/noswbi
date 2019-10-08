@@ -1,4 +1,24 @@
-const { createRouter, createServer, auth } = require("./index");
+// check env vars are defined
+
+const requiredEnvVars = [
+  "JWT_SECRET",
+  "JWT_ISSUER",
+  "JWT_AUDIENCE",
+  "GOOGLE_CLIENT_ID",
+  "GOOGLE_SECRET"
+];
+
+requiredEnvVars.forEach(i => {
+  if (typeof process.env[i] === "undefined") {
+    // eslint-disable-next-line no-console
+    console.log("Check and provide required env vars");
+    process.exit(1);
+  }
+});
+
+// example:
+
+const { createRouter, createServer, auth } = require("../index");
 
 const router = createRouter();
 const protectedRoutes = createRouter({ requireAuth: true });

@@ -13,7 +13,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "example:api-with-social-login": "env $(cat .env | xargs) node examples/api-with-social-login.js"
   },
   "author": "Adrián Gonzalo",
   "license": "MIT",

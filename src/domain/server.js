@@ -10,6 +10,8 @@ exports.createServer = (routers, config = {}) => {
     throw new Error("createServer requires a router object");
   }
 
+  const routesPrefix = config.routesPrefix || "/";
+
   if (config.allowCors) {
     server.use(cors());
   }
@@ -27,9 +29,6 @@ exports.createServer = (routers, config = {}) => {
   }
 
   // TODO: setup logging system from options, or generic one with winston
-
-  const routesPrefix = config.routesPrefix || "/";
-  validateRouter(routers).forEach(router => server.use(routesPrefix, router));
 
   // TODO: swagger openapi endpoint
   // TODO: health / status endpoint
@@ -51,6 +50,14 @@ exports.createServer = (routers, config = {}) => {
     );
   }
   //
+
+  /**
+   * External routes are configured at the end, so we are sure
+   * that public routes like social login routes, are not protected.
+   * As this follows the middleware approach, if a protected router
+   * is attached, every router attached after it will be also protected.
+   */
+  validateRouter(routers).forEach(router => server.use(routesPrefix, router));
 
   server.use(handlers.notFoundHandler());
   server.use(handlers.errorHandler());
