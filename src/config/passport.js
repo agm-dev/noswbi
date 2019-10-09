@@ -39,14 +39,23 @@ const configureAuth = config => {
     new passportGoogle.Strategy(
       optionsGoogle,
       (accessToken, refreshToken, profile, cb) => {
-        // TODO: find or create user in database
         const user = {
           id: profile.id || profile._json.sub,
           name: profile.displayName || profile._json.name,
           // eslint-disable-next-line prettier/prettier
           email: profile.emails.filter(i => i.verified).find(i => i.value).value || profile._json.email,
         };
-        return cb(null, user);
+
+        const { userModel } = auth;
+        if (!userModel || typeof userModel.findOrCreate === "undefined") {
+          return cb(null, user);
+        }
+
+        // use the userModel to find or create the user
+        return userModel
+          .findOrCreate(user)
+          .then(dbUser => cb(null, dbUser))
+          .catch(err => cb(err));
       }
     )
   );
