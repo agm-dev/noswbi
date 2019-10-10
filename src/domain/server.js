@@ -42,11 +42,14 @@ exports.createServer = (routers, config = {}) => {
     // TODO: create utility validateConfigAuth
     server.use(
       routesPrefix,
-      generateAuthRouter({
-        secret: config.auth.jwtSecret,
-        issuer: config.auth.issuer,
-        audience: config.auth.audience
-      })
+      generateAuthRouter(
+        {
+          secret: config.auth.jwtSecret,
+          issuer: config.auth.issuer,
+          audience: config.auth.audience
+        },
+        config.auth.loginRedirection
+      )
     );
   }
   //

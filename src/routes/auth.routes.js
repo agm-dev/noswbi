@@ -2,7 +2,7 @@ const { createRouter } = require("../domain/router");
 const { googleLogin, googleLoginRedirect } = require("../config/passport");
 const { generateJwt } = require("../utils/tokens");
 
-const generateAuthRouter = jwtConfig => {
+const generateAuthRouter = (jwtConfig, redirectUri = "/") => {
   const router = createRouter();
 
   const generateToken = (req, res) => {
@@ -14,9 +14,8 @@ const generateAuthRouter = jwtConfig => {
       },
       jwtConfig
     );
-    console.log("generate token middleware: ", token);
-    // res.redirect(`/?access_token=${token}`);
-    res.json({ token });
+
+    res.redirect(`${redirectUri}?access_token=${token}`);
   };
 
   router.get("/auth/google", googleLogin());
