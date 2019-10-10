@@ -20,7 +20,7 @@ exports.createServer = (routers, config = {}) => {
     // eslint-disable-next-line global-require
     const passport = require("passport");
     server.use(passport.initialize());
-    configureAuth(config); // TODO: try to put this inside a custom passport were initialize does original initialize plus this, OR inside the auth router
+    configureAuth(config);
   }
 
   // enabled by default
@@ -28,18 +28,7 @@ exports.createServer = (routers, config = {}) => {
     server.use(handlers.forceJsonResponse());
   }
 
-  // TODO: setup logging system from options, or generic one with winston
-
-  // TODO: swagger openapi endpoint
-  // TODO: health / status endpoint
-
-  // TODO: passport auth endpoint if enabled from options
-
-  // TODO: config.auth is an object with required configuration
-  // for social login (google). Add an util to validate the provided
-  // config or throw proper errors
   if (validateConfigAuth(config)) {
-    // TODO: create utility validateConfigAuth
     server.use(
       routesPrefix,
       generateAuthRouter(
@@ -52,7 +41,6 @@ exports.createServer = (routers, config = {}) => {
       )
     );
   }
-  //
 
   /**
    * External routes are configured at the end, so we are sure

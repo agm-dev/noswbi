@@ -8,7 +8,6 @@ const configureAuth = config => {
 
   const optionsJwt = {
     jwtFromRequest: passportJwt.ExtractJwt.fromAuthHeaderWithScheme("jwt"),
-    // jwtFromRequest: passportJwt.ExtractJwt.fromAuthHeader(),
     secretOrKey: auth.jwtSecret,
     issuer: auth.issuer,
     audience: auth.audience

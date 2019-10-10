@@ -8,7 +8,6 @@ exports.forceJsonResponse = () => (req, res, next) => {
 
 exports.notFoundHandler = ({ logger } = {}) => (req, res) => {
   if (logger) {
-    // TODO: append to the log an object with some request data
     logger.info("not found");
   }
 
@@ -30,8 +29,6 @@ exports.errorHandler = (config = {}) => (err, req, res, next) => {
   if (logger) {
     logger.error(err);
   }
-
-  console.log(err);
 
   const error = new ApiError(
     httpStatus.INTERNAL_SERVER_ERROR,
