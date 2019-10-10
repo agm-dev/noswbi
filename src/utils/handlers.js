@@ -8,7 +8,6 @@ exports.forceJsonResponse = () => (req, res, next) => {
 
 exports.notFoundHandler = ({ logger } = {}) => (req, res) => {
   if (logger) {
-    // TODO: append to the log an object with some request data
     logger.info("not found");
   }
 
