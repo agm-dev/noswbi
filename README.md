@@ -15,11 +15,33 @@ Noswbi is a NodeJS HTTP server with everything but routes configured.
 npm install --save noswbi
 ```
 
+## Features
+
+Noswbi includes the following configuration / features:
+
+- helmet
+- compression
+- overload protection (only on production environment)
+- body-parser for JSON and urlencoded (extended false)
+- cors (can be enabled with `createServer(router, { allowCors: true }))
+- forces `Content-Type: application/json` on response headers (can be disabled with `createServer(router, { forceJsonResponse: false })`)
+- attach router routes to `/` unless `routesPrefix` provided on config when creating the server
+- authentication protection for routes
+- social login with Google
+- 404 not found handler included
+- error handler included
+
+## Production
+
+Don't forget to set the `NODE_ENV` variable to `"production"`. It will improve the performance of the server and will remove the stack trace from error handler. It will also enable the overload protection.
+
 ## Usage
 
-The idea behind noswbi is providing a configured server, so you can focus only on coding the routes and logic of your API.
+The idea behind noswbi is to provide a configured server, so you can focus only on coding the routes and logic of your API.
 
-Noswbi exposes two methods: `createRouter` and `createServer`:
+Noswbi exposes two methods: `createRouter` and `createServer`. You can use them to easily create a server.
+
+### Simple server
 
 ```javascript
 // Import the two required noswbi methods to create the server:
@@ -38,19 +60,69 @@ const server = createServer(router);
 server.listen(3000);
 ```
 
-## Features
+### Server with social login and protected routes
 
-Noswbi includes the following configuration / features:
+```javascript
+const mongoose = require("mongoose");
+const { createRouter, createServer } = require("noswbi");
 
-- helmet
-- compression
-- body-parser for JSON and urlencoded (extended false)
--  cors (can be enabled with `createServer(router, { allowCors: true }))
-- forces `Content-Type: application/json` on response headers (can be disabled with `createServer(router, { forceJsonResponse: false })`)
-- attach router routes to `/` unless `routesPrefix` provided on config when creating the server
-- 404 not found handler included
-- error handler included
+const router = createRouter();
 
-## Production
+router.get("/", (req, res) => res.send("holi"));
 
-Don't forget to set the `NODE_ENV` variable to `"production"`. It will improve the performance of the server and will remove the stack trace from error handler.
+/**
+ * The requests to the routes attached to this router require
+ * an Authorization header with value `JWT ${token}`
+ */
+const protectedRoutes = createRouter({ requireAuth: true });
+
+protectedRoutes.get("/protected-by-default", (req, res) =>
+  res.json({
+    message: "this should be protected by default",
+    user: req.user
+  })
+);
+
+const options = {
+  allowCors: true,
+  forceJsonResponse: true, // default value
+  domain: process.env.DOMAIN,
+  routesPrefix: "/", // default value
+  auth: {
+    jwtSecret: process.env.JWT_SECRET,
+    issuer: process.env.JWT_ISSUER,
+    audience: process.env.JWT_AUDIENCE,
+    google: { // you will need to create an configure a Google app for login
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_SECRET
+    },
+    /**
+     * If you provide an user model with a method findOrCreate
+     * noswbi will call it with the user info provided by Google
+     * after succesful login.
+     */
+    userModel: require("./path/to/your/user/model") // optional
+  }
+};
+
+const server = createServer([router, protectedRoutes], options);
+
+mongoose.connect(
+  "mongodb://localhost:27017/test",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  },
+  err => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    server.listen(3000, () => console.log("running on 3000"));
+  }
+);
+```
+
+## Examples
+
+You can check full examples [here](./examples).

@@ -31,6 +31,8 @@ exports.errorHandler = (config = {}) => (err, req, res, next) => {
     logger.error(err);
   }
 
+  console.log(err);
+
   const error = new ApiError(
     httpStatus.INTERNAL_SERVER_ERROR,
     "INTERNAL_SERVER_ERROR"
