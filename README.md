@@ -39,7 +39,7 @@ Don't forget to set the `NODE_ENV` variable to `"production"`. It will improve t
 
 The idea behind noswbi is to provide a configured server, so you can focus only on coding the routes and logic of your API.
 
-Noswbi exposes two main methods: `createRouter` and `createServer`. You can use them to easily create a server.
+Noswbi exposes two methods: `createRouter` and `createServer`. You can use them to easily create a server.
 
 ### Simple server
 
@@ -64,18 +64,11 @@ server.listen(3000);
 
 ```javascript
 const mongoose = require("mongoose");
-const { createRouter, createServer, auth } = require("noswbi");
+const { createRouter, createServer } = require("noswbi");
 
 const router = createRouter();
 
 router.get("/", (req, res) => res.send("holi"));
-
-router.get("/protected", auth(), (req, res) =>
-  res.json({
-    message: "protected!",
-    user: req.user
-  })
-);
 
 /**
  * The requests to the routes attached to this router require

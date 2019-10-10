@@ -19,7 +19,7 @@ requiredEnvVars.forEach(i => {
 // example:
 // eslint-disable-next-line import/no-extraneous-dependencies
 const mongoose = require("mongoose");
-const { createRouter, createServer, auth } = require("../index");
+const { createRouter, createServer } = require("../index");
 
 // db model
 const userSchema = new mongoose.Schema({
@@ -46,12 +46,6 @@ const router = createRouter();
 const protectedRoutes = createRouter({ requireAuth: true });
 
 router.get("/", (req, res) => res.send("holi"));
-router.get("/protected", auth(), (req, res) =>
-  res.json({
-    message: "protected!",
-    user: req.user || {}
-  })
-);
 
 protectedRoutes.get("/supersecret", (req, res) =>
   res.json({

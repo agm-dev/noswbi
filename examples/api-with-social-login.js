@@ -18,18 +18,12 @@ requiredEnvVars.forEach(i => {
 
 // example:
 
-const { createRouter, createServer, auth } = require("../index");
+const { createRouter, createServer } = require("../index");
 
 const router = createRouter();
 const protectedRoutes = createRouter({ requireAuth: true });
 
 router.get("/", (req, res) => res.send("holi"));
-router.get("/protected", auth(), (req, res) =>
-  res.json({
-    message: "protected!",
-    user: req.user || {}
-  })
-);
 
 protectedRoutes.get("/supersecret", (req, res) =>
   res.json({
