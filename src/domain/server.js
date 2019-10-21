@@ -35,7 +35,8 @@ exports.createServer = (routers, config = {}) => {
         {
           secret: config.auth.jwtSecret,
           issuer: config.auth.issuer,
-          audience: config.auth.audience
+          audience: config.auth.audience,
+          payloadFields: config.auth.payloadFields
         },
         config.auth.loginRedirection
       )
