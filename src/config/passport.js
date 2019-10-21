@@ -19,12 +19,22 @@ const configureAuth = config => {
         return done();
       }
 
-      const data = {
+      const payloadFields = auth.payloadFields ? auth.payloadFields : [];
+
+      const defaultData = {
         id: payload.sub,
         name: payload.name,
         email: payload.email
       };
-      return done(null, data, payload);
+
+      // FIXME: extract to utils
+      const extraData = payloadFields
+        .filter(field => Object.keys(payload).includes(field))
+        .reduce((result, current) => {
+          return Object.assign(result, { [current]: payload[current] });
+        }, defaultData);
+
+      return done(null, Object.assign(defaultData, extraData), payload);
     })
   );
 
