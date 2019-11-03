@@ -4,6 +4,7 @@ const handlers = require("../utils/handlers");
 const { validateConfigAuth, validateRouter } = require("../utils/validators");
 const { configureAuth } = require("../config/passport");
 const { generateAuthRouter } = require("../routes/auth.routes");
+const statusRoutes = require("../routes/status.route");
 
 exports.createServer = (routers, config = {}) => {
   if (!routers || !routers.length) {
@@ -42,6 +43,8 @@ exports.createServer = (routers, config = {}) => {
       )
     );
   }
+
+  server.use(routesPrefix, statusRoutes);
 
   /**
    * External routes are configured at the end, so we are sure
