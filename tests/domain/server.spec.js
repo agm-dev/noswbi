@@ -3,8 +3,9 @@ const httpStatus = require("http-status");
 const { createRouter } = require("../../src/domain/router");
 const { createServer } = require("../../src/domain/server");
 
+const testEndpoint = "/test";
 const router = createRouter();
-router.get("/status", (req, res) => res.status(200).json({ status: "OK" }));
+router.get(testEndpoint, (req, res) => res.status(200).json({ status: "OK" }));
 
 const server = createServer(router);
 
@@ -31,7 +32,7 @@ describe("createServer", () => {
 
   test("should create a server with provided router", async () => {
     await request(server)
-      .get("/status")
+      .get(testEndpoint)
       .expect("Content-Type", /json/)
       .expect(httpStatus.OK, { status: "OK" });
   });
@@ -49,9 +50,15 @@ describe("createServer", () => {
   test("should enable cors if allowCors enabled on config", async () => {
     const corsServer = createServer(router, { allowCors: true });
     await request(corsServer)
-      .get("/status")
+      .get(testEndpoint)
       .expect(httpStatus.OK)
       // .expect("Access-Control-Allow-Origin", "*") // FIXME: this doesn't work. Try moving cors to router
       .expect({ status: "OK" });
+  });
+
+  test("should include a /status endpoint which returns no content response if server up", async () => {
+    await request(server)
+      .get("/status")
+      .expect(httpStatus.NO_CONTENT);
   });
 });
